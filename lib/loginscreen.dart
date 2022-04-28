@@ -5,13 +5,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final Color primaryColor = Color(0xff18203d);
+
   final Color secondaryColor = Color(0xff232c51);
 
   final Color logoGreen = Color(0xff25bcbb);
 
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
 
   @override
@@ -54,7 +61,18 @@ class LoginScreen extends StatelessWidget {
                   elevation: 0,
                   minWidth: double.maxFinite,
                   height: 50,
-                  onPressed: () {},
+                  onPressed: () {
+                    User? firebaseUser;
+                    firebaseAuth
+                        .signInWithEmailAndPassword(
+                            email: 'dumy@email.com', password: 'dumy123')
+                        .then((authResult) {
+                      setState(() {
+                        firebaseUser = authResult.user;
+                      });
+                      print(firebaseUser?.email);
+                    });
+                  },
                   color: logoGreen,
                   child: Text('Login',
                       style: TextStyle(color: Colors.white, fontSize: 16)),
