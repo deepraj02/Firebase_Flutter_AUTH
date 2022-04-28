@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_flutter_auth/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,29 +21,61 @@ final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class _HomePageState extends State<HomePage> {
+  Color primaryColor = Color(0xff18203d);
+  Color secondaryColor = Color(0xff232c51);
+  Color logoGreen = Color(0xff25bcbb);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[200],
-      appBar: AppBar(
-        backgroundColor: Colors.teal[500],
-        title: Text("Google-SignIn Demo"),
-        elevation: 0,
-      ),
-      body: Center(
+      backgroundColor: primaryColor,
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlatButton(
-              onPressed: _signInWithGoogle,
-              child: Padding(
-                padding: EdgeInsets.all(0),
-                child: Text(
-                  "Sign-In with Google",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
+          children: <Widget>[
+            //We take the image from the assets
+            Image.asset(
+              'assets/bg.png',
+              height: 250,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            //Texts and Styling of them
+            Text(
+              'Welcome to Awesomeness !',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 28),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'A one-stop portal for you to learn the latest technologies from SCRATCH',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            //Our MaterialButton which when pressed will take us to a new screen named as
+            //LoginScreen
+            MaterialButton(
+              elevation: 0,
+              height: 50,
+              minWidth: 70,
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => LoginScreen()));
+              },
+              color: logoGreen,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Get Started',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                  Icon(Icons.arrow_forward_ios)
+                ],
               ),
-              color: Color.fromARGB(255, 192, 46, 46),
+              textColor: Colors.white,
             )
           ],
         ),
@@ -51,13 +84,3 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-_signInWithGoogle() async {
-  final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-  final GoogleSignInAuthentication googleAuth =
-      await googleUser!.authentication;
-
-  final AuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-
-  final User? user = (await firebaseAuth.signInWithCredential(credential)).user;
-}
